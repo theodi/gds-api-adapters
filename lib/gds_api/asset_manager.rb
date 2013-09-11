@@ -19,6 +19,19 @@ class GdsApi::AssetManager < GdsApi::Base
     post_multipart("#{base_url}/assets", { :asset => asset })
   end
 
+  # Update an asset, given attributes
+  #
+  # Makes a `PUT` request to the asset manager api to update an asset.
+  #
+  # @param id [String] The ID of the asset to update.
+  # @param options [Hash] The attributes for the asset to send to the api.
+  # @return [Net::HTTPResponse] The raw http response from the api.
+  #
+  # @raise [HTTPErrorResponse] if the request returns an error
+  def update_asset(id, options)
+    put_json("#{base_url}/assets/#{id}", options)
+  end
+
   # Fetches an asset given the id
   #
   # @param id [String] The asset identifier
