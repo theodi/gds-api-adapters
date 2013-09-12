@@ -29,7 +29,10 @@ class GdsApi::AssetManager < GdsApi::Base
   #
   # @raise [HTTPErrorResponse] if the request returns an error
   def update_asset(id, options)
-    put_json("#{base_url}/assets/#{id}", options)
+    url = "#{base_url}/assets/#{id}"
+    response = put_json(url, options)
+    client.cache.delete url
+    response
   end
 
   # Fetches an asset given the id
