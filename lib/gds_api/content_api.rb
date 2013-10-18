@@ -42,6 +42,10 @@ class GdsApi::ContentApi < GdsApi::Base
   def sorted_by(tag, sort_by)
     get_list!("#{base_url}/with_tag.json?tag=#{CGI.escape(tag)}&sort=#{sort_by}")
   end
+  
+  def related(type, item)
+    get_list("#{base_url}/related.json?#{CGI.escape(type)}=#{CGI.escape(item)}")
+  end
 
   def artefact(slug, params={})
     url = "#{base_url}/#{CGI.escape(slug)}.json"
