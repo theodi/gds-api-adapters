@@ -43,6 +43,14 @@ class GdsApi::ContentApi < GdsApi::Base
     get_list!("#{base_url}/with_tag.json?tag=#{CGI.escape(tag)}&sort=#{sort_by}")
   end
   
+  def latest(key, value)
+    get_json!("#{base_url}/latest.json?#{key}=#{value}")
+  end
+  
+  def upcoming(type, order_by)
+    get_json!("#{base_url}/upcoming.json?order_by=#{order_by}&type=#{type}")
+  end
+  
   def related(type, item)
     get_list("#{base_url}/related.json?#{CGI.escape(type)}=#{CGI.escape(item)}")
   end
