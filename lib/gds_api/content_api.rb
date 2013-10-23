@@ -51,6 +51,20 @@ class GdsApi::ContentApi < GdsApi::Base
     get_json!("#{base_url}/upcoming.json?order_by=#{order_by}&type=#{type}")
   end
   
+  def course_instance(date, course, edition = nil)
+    if edition != nil && ! options.include?(:bearer_token)
+      raise GdsApi::NoBearerToken
+    end
+    
+    url = "#{base_url}/course-instance.json?date=#{date}&course=#{course}"
+    
+    if edition.nil?
+      get_json!(url)
+    else
+      get_json!(url + "&edition=#{edition}")
+    end
+  end
+  
   def related(type, item)
     get_list("#{base_url}/related.json?#{CGI.escape(type)}=#{CGI.escape(item)}")
   end
