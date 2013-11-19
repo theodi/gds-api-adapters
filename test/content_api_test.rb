@@ -272,6 +272,19 @@ describe GdsApi::ContentApi do
       assert_equal "Complain about a claims company", response.first.title
     end
 
+    it "should allow extra options on tag queries" do
+      tag = "crime-and-justice"
+      api_url = "#{@base_api_url}/with_tag.json?tag=#{tag}&include_children=1&author=batman"
+      json = {
+        results: [{title: "Complain about a claims company"}]
+      }.to_json
+      stub_request(:get, api_url).to_return(:status => 200, :body => json)
+      response = @api.with_tag("crime-and-justice", author: 'batman')
+
+      # Attribute access
+      assert_equal "Complain about a claims company", response.first.title
+    end
+
     it "should return tag tree for a specific tag" do
       tag = "crime-and-justice"
       api_url = "#{@base_api_url}/tags/#{tag}.json"
