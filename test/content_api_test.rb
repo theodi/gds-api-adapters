@@ -221,6 +221,21 @@ describe GdsApi::ContentApi do
       assert_equal %w(answer local_transaction place guide), response.map(&:format)
     end
 
+    it "should apply extra filters" do
+      WebMock.stub_request(:get, @artefacts_endpoint+'?author=batman').
+        to_return(:body => {
+          "_response_info" => {"status" => "ok"},
+          "total" => 2,
+          "results" => [
+            {"format" => "answer", "web_url" => "http://www.test.gov.uk/foo"},
+            {"format" => "local_transaction", "web_url" => "http://www.test.gov.uk/bar/baz"},
+          ]
+        }.to_json)
+
+      response = @api.artefacts(author: 'batman')
+      assert_equal 2, response.count
+    end
+
     it "should work with a paginated response" do
       WebMock.stub_request(:get, @artefacts_endpoint).
         to_return(
