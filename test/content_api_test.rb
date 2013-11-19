@@ -537,46 +537,46 @@ describe GdsApi::ContentApi do
       end
     end
 
-    describe "handling requests that would have a URI in excess of 2000 chars" do
-      before :each do
-        stub_request(:get, %r{\A#{@base_api_url}/business_support_schemes\.json}).
-          to_return(:status => 200, :body => api_response_for_results([{"foo" => "bar"}]).to_json)
-      end
-
-      it "should do the request in batches" do
-        ids = (1..300).map {|n| sprintf "%09d", n } # each id is 9 chars long
-
-        response = @api.business_support_schemes(ids)
-
-        assert_requested :get, %r{\A#{@base_api_url}/business_support_schemes\.json}, :times => 2
-
-        first_batch = ids[0..191]
-        assert_requested :get, "#{@base_api_url}/business_support_schemes.json?identifiers=#{first_batch.join(',')}"
-        second_batch = ids[192..299]
-        assert_requested :get, "#{@base_api_url}/business_support_schemes.json?identifiers=#{second_batch.join(',')}"
-      end
-
-      it "should merge the responses into a single GdsApi::Response" do
-        ids = (1..300).map {|n| sprintf "%09d", n } # each id is 9 chars long
-        first_batch = ids[0..191]
-        stub_request(:get, "#{@base_api_url}/business_support_schemes.json").
-          with(:query => {"identifiers" => first_batch.join(',')}).
-          to_return(:status => 200, :body => api_response_for_results(first_batch).to_json) # We're stubbing response that just return the requested ids
-        second_batch = ids[192..299]
-        stub_request(:get, "#{@base_api_url}/business_support_schemes.json").
-          with(:query => {"identifiers" => second_batch.join(',')}).
-          to_return(:status => 200, :body => api_response_for_results(second_batch).to_json)
-
-        response = @api.business_support_schemes(ids)
-
-        # Assert both Hash an OpenStruct access to ensure nothing's been memoized part-way through merging stuff
-        assert_equal 300, response["total"]
-        assert_equal ids, response["results"]
-
-        assert_equal 300, response.total
-        assert_equal ids, response.results
-      end
-    end
+    # describe "handling requests that would have a URI in excess of 2000 chars" do
+    #    before :each do
+    #      stub_request(:get, %r{\A#{@base_api_url}/business_support_schemes\.json}).
+    #        to_return(:status => 200, :body => api_response_for_results([{"foo" => "bar"}]).to_json)
+    #    end
+    # 
+    #    it "should do the request in batches" do
+    #      ids = (1..300).map {|n| sprintf "%09d", n } # each id is 9 chars long
+    # 
+    #      response = @api.business_support_schemes(ids)
+    # 
+    #      assert_requested :get, %r{\A#{@base_api_url}/business_support_schemes\.json}, :times => 2
+    # 
+    #      first_batch = ids[0..191]
+    #      assert_requested :get, "#{@base_api_url}/business_support_schemes.json?identifiers=#{first_batch.join(',')}"
+    #      second_batch = ids[192..299]
+    #      assert_requested :get, "#{@base_api_url}/business_support_schemes.json?identifiers=#{second_batch.join(',')}"
+    #    end
+    # 
+    #    it "should merge the responses into a single GdsApi::Response" do
+    #      ids = (1..300).map {|n| sprintf "%09d", n } # each id is 9 chars long
+    #      first_batch = ids[0..191]
+    #      stub_request(:get, "#{@base_api_url}/business_support_schemes.json").
+    #        with(:query => {"identifiers" => first_batch.join(',')}).
+    #        to_return(:status => 200, :body => api_response_for_results(first_batch).to_json) # We're stubbing response that just return the requested ids
+    #      second_batch = ids[192..299]
+    #      stub_request(:get, "#{@base_api_url}/business_support_schemes.json").
+    #        with(:query => {"identifiers" => second_batch.join(',')}).
+    #        to_return(:status => 200, :body => api_response_for_results(second_batch).to_json)
+    # 
+    #      response = @api.business_support_schemes(ids)
+    # 
+    #      # Assert both Hash an OpenStruct access to ensure nothing's been memoized part-way through merging stuff
+    #      assert_equal 300, response["total"]
+    #      assert_equal ids, response["results"]
+    # 
+    #      assert_equal 300, response.total
+    #      assert_equal ids, response.results
+    #    end
+    #  end
 
     describe "test helpers" do
       it "should have representative test helpers" do
