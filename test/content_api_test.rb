@@ -359,7 +359,25 @@ describe GdsApi::ContentApi do
       assert_equal "http://www.test.gov.uk/vat2", response.with_subsequent_pages.to_a.last.web_url
     end
   end
-  
+
+  describe "artefacts for need" do
+    it "should fetch artefacts with a given need id" do
+      skip("ODI does not have needs management.")
+
+      content_api_has_artefacts_for_need_id(100123, [
+        { "format" => "answer", "web_url" => "http://www.gov.uk/burrito" },
+        { "format" => "guide", "web_url" => "http://www.gov.uk/burrito-standard" },
+        { "format" => "transaction", "web_url" => "http://www.gov.uk/local-burrito-place" }
+      ])
+
+      response = @api.for_need(100123)
+
+      assert_equal 3, response.count
+      assert_equal ["http://www.gov.uk/burrito", "http://www.gov.uk/burrito-standard", "http://www.gov.uk/local-burrito-place" ], response.map(&:web_url)
+      assert_equal ["answer", "guide", "transaction" ], response.map(&:format)
+    end
+  end
+
   describe "tags" do
     it "should produce an artefact with the provided tag" do
       tag = "crime-and-justice"

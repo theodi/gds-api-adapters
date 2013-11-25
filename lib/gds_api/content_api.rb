@@ -76,6 +76,10 @@ class GdsApi::ContentApi < GdsApi::Base
     get_list("#{base_url}/related.json?#{CGI.escape(type)}=#{CGI.escape(item)}")
   end
 
+  def for_need(need_id)
+    get_list("#{base_url}/for_need/#{CGI.escape(need_id.to_s)}.json")
+  end
+
   def artefact(slug, params={})
     url = "#{base_url}/#{CGI.escape(slug)}.json"
     query = params.map { |k,v| "#{k}=#{v}" }
