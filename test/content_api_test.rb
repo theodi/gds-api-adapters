@@ -296,7 +296,22 @@ describe GdsApi::ContentApi do
       assert_equal 4, response.count
       assert_equal %w(answer local_transaction place guide), response.map(&:format)
     end
-  
+
+    it "should apply extra filters" do
+      WebMock.stub_request(:get, @artefacts_endpoint+'?author=batman').
+        to_return(:body => {
+          "_response_info" => {"status" => "ok"},
+          "total" => 2,
+          "results" => [
+            {"format" => "answer", "web_url" => "http://www.test.gov.uk/foo"},
+            {"format" => "local_transaction", "web_url" => "http://www.test.gov.uk/bar/baz"},
+          ]
+        }.to_json)
+
+      response = @api.artefacts(author: 'batman')
+      assert_equal 2, response.count
+    end
+
     it "should work with a paginated response" do
       WebMock.stub_request(:get, @artefacts_endpoint).
         to_return(
@@ -347,7 +362,24 @@ describe GdsApi::ContentApi do
       # Attribute access
       assert_equal "Complain about a claims company", response.first.title
     end
+<<<<<<< HEAD
   
+=======
+
+    it "should allow extra options on tag queries" do
+      tag = "crime-and-justice"
+      api_url = "#{@base_api_url}/with_tag.json?tag=#{tag}&include_children=1&author=batman"
+      json = {
+        results: [{title: "Complain about a claims company"}]
+      }.to_json
+      stub_request(:get, api_url).to_return(:status => 200, :body => json)
+      response = @api.with_tag("crime-and-justice", author: 'batman')
+
+      # Attribute access
+      assert_equal "Complain about a claims company", response.first.title
+    end
+
+>>>>>>> 74ff4be040c7450846fce8a389f64feeb9efb061
     it "should return tag tree for a specific tag" do
       tag = "crime-and-justice"
       api_url = "#{@base_api_url}/tags/#{tag}.json"

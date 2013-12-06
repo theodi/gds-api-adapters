@@ -1,6 +1,7 @@
 require_relative 'base'
 require_relative 'exceptions'
 require_relative 'list_response'
+require 'active_support/core_ext/object/to_query'
 
 class GdsApi::ContentApi < GdsApi::Base
   include GdsApi::ExceptionHandling
@@ -31,16 +32,17 @@ class GdsApi::ContentApi < GdsApi::Base
     get_json("#{base_url}/tags/#{CGI.escape(tag)}.json")
   end
 
-  def with_tag(tag)
-    get_list!("#{base_url}/with_tag.json?tag=#{CGI.escape(tag)}&include_children=1")
+  def with_tag(tag, options = {})
+    options.merge!(tag: tag, include_children: 1)
+    get_list!("#{base_url}/with_tag.json?#{options.to_query}")
   end
 
   def curated_list(tag)
-    get_list("#{base_url}/with_tag.json?tag=#{CGI.escape(tag)}&sort=curated")
+    sorted_by(tag, 'curated')
   end
 
   def sorted_by(tag, sort_by)
-    get_list!("#{base_url}/with_tag.json?tag=#{CGI.escape(tag)}&sort=#{sort_by}")
+    with_tag(tag, sort: sort_by)
   end
   
   def latest(key, value)
@@ -82,8 +84,12 @@ class GdsApi::ContentApi < GdsApi::Base
     get_json(url)
   end
 
-  def artefacts
-    get_list!("#{base_url}/artefacts.json")
+  def artefacts(options = {})
+    url = "#{base_url}/artefacts.json"
+    if !options.empty?
+      url += "?#{options.to_query}"
+    end
+    get_list!(url)
   end
 
   def local_authority(snac_code)
