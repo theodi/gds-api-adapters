@@ -11,7 +11,7 @@ class GdsApi::ContentApi < GdsApi::Base
     # any `web_url` values to relative URLs if they are from the same host.
     #
     # For example: "https://www.gov.uk"
-
+    @role = options.delete(:role)
     @web_urls_relative_to = options.delete(:web_urls_relative_to)
     super
   end
@@ -144,6 +144,7 @@ class GdsApi::ContentApi < GdsApi::Base
     create_response = create_response || Proc.new { |r|
       GdsApi::Response.new(r, web_urls_relative_to: @web_urls_relative_to)
     }
+    url = add_role(url) unless @role.nil?
     super(url, &create_response)
   end
 
@@ -151,6 +152,7 @@ class GdsApi::ContentApi < GdsApi::Base
     create_response = create_response || Proc.new { |r|
       GdsApi::Response.new(r, web_urls_relative_to: @web_urls_relative_to)
     }
+    url = add_role(url) unless @role.nil?
     super(url, &create_response)
   end
 
@@ -168,5 +170,12 @@ class GdsApi::ContentApi < GdsApi::Base
       else
         batch_response
       end
+    end
+    
+    def add_role(url)
+      uri = URI.parse(url)
+      q = URI.decode_www_form(uri.query || []) << ["role", @role]
+      uri.query = URI.encode_www_form(q)
+      uri.to_s
     end
 end
