@@ -362,9 +362,6 @@ describe GdsApi::ContentApi do
       # Attribute access
       assert_equal "Complain about a claims company", response.first.title
     end
-<<<<<<< HEAD
-  
-=======
 
     it "should allow extra options on tag queries" do
       tag = "crime-and-justice"
@@ -379,7 +376,6 @@ describe GdsApi::ContentApi do
       assert_equal "Complain about a claims company", response.first.title
     end
 
->>>>>>> 74ff4be040c7450846fce8a389f64feeb9efb061
     it "should return tag tree for a specific tag" do
       tag = "crime-and-justice"
       api_url = "#{@base_api_url}/tags/#{tag}.json"
