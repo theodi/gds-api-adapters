@@ -36,18 +36,18 @@ describe GdsApi::ContentApi do
     end
     
     it "should append the role to the URL for the with_tag list" do
-      stub_request(:get, "#{@base_api_url}/with_tag.json?tag=bar&role=odi&include_children=1").
+      stub_request(:get, "#{@base_api_url}/with_tag.json?include_children=1&tag=bar&role=odi").
         with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
         to_return(:status => 200, :body => "", :headers => {})
-      @role_api.expects(:add_role).with("#{@base_api_url}/with_tag.json?tag=bar&include_children=1").returns("#{@base_api_url}/with_tag.json?tag=bar&include_children=1&role=odi")
+      @role_api.expects(:add_role).with("#{@base_api_url}/with_tag.json?include_children=1&tag=bar").returns("#{@base_api_url}/with_tag.json?include_children=1&tag=bar&role=odi")
       @role_api.with_tag("bar")
     end
 
     it "should append the role to the URL for the curated list" do
-      stub_request(:get, "#{@base_api_url}/with_tag.json?tag=bar&role=odi&sort=curated").
+      stub_request(:get, "#{@base_api_url}/with_tag.json?include_children=1&role=odi&sort=curated&tag=bar").
         with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
         to_return(:status => 200, :body => "", :headers => {})
-      @role_api.expects(:add_role).with("#{@base_api_url}/with_tag.json?tag=bar&sort=curated").returns("#{@base_api_url}/with_tag.json?tag=bar&sort=curated&role=odi")
+      @role_api.expects(:add_role).with("#{@base_api_url}/with_tag.json?include_children=1&sort=curated&tag=bar").returns("#{@base_api_url}/with_tag.json?include_children=1&sort=curated&tag=bar&role=odi")
       @role_api.curated_list("bar")
     end
 
