@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'link_header'
   s.add_dependency 'lrucache', '~> 0.1.1'
   s.add_dependency 'rest-client', '~> 1.6.3'  # At least 1.6.3 for redirect limits
-  s.add_dependency 'activesupport', '~> 3.2.14'
+  s.add_dependency 'activesupport'
 
   s.add_development_dependency 'rdoc', '3.12'
   s.add_development_dependency 'rake', '~> 0.9.2.2'
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha', '~> 0.12.4'
   s.add_development_dependency "minitest", "~> 3.4.0"
   s.add_development_dependency 'rack'
+  s.add_development_dependency 'pry'
   s.add_development_dependency 'simplecov', '~> 0.5.4'
   s.add_development_dependency 'simplecov-rcov'
   s.add_development_dependency 'gem_publisher', '~> 1.1.1'
