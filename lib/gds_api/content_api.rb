@@ -20,6 +20,10 @@ class GdsApi::ContentApi < GdsApi::Base
   def sections
     get_list!("#{base_url}/tags.json?type=section")
   end
+  
+  def section(section)
+    get_list!("#{base_url}/section.json?id=#{CGI.escape(section)}")
+  end
 
   def root_sections
     get_list!("#{base_url}/tags.json?type=section&root_sections=true")

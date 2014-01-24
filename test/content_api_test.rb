@@ -150,6 +150,21 @@ describe GdsApi::ContentApi do
     end
   end
   
+  describe "section" do
+    it "should show section details" do
+      stub_request(:get, "#{@base_api_url}/section.json?id=index").
+        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        to_return(:status => 200, :body => File.open(File.expand_path(File.join('test', 'fixtures', 'index_section.json'))).read, :headers => {})
+      response = @api.section("index")
+      
+      assert_equal "Index", response['title']
+      assert_equal "http://theodi.org/about", response['link']
+      assert_equal "The Open Data Institute", response['description']
+      assert_equal "/uploads/assets/e2/2d/52e22d0a60aa273fd4000001/about_hero.jpg", response['hero']
+      assert_equal 12, response['modules'].count
+    end
+  end
+  
   describe "sections" do
     it "should show a list of sections" do
       content_api_has_root_sections(["crime"])
