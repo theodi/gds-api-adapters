@@ -21,7 +21,7 @@ describe GdsApi::ContentApi do
     
     it "should append the role to the URL for an artefact" do
       stub_request(:get, "#{@base_api_url}/batman.json?role=odi").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => "", :headers => {})
       @role_api.expects(:add_role).with("#{@base_api_url}/batman.json").returns("#{@base_api_url}/batman.json?role=odi")
       @role_api.artefact("batman")
@@ -29,7 +29,7 @@ describe GdsApi::ContentApi do
     
     it "should append the role to the URL for the artefact list" do
       stub_request(:get, "#{@base_api_url}/artefacts.json?role=odi").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => "", :headers => {})
       @role_api.expects(:add_role).with("#{@base_api_url}/artefacts.json").returns("#{@base_api_url}/artefacts.json?role=odi")
       @role_api.artefacts
@@ -37,7 +37,7 @@ describe GdsApi::ContentApi do
     
     it "should append the role to the URL for the with_tag list" do
       stub_request(:get, "#{@base_api_url}/with_tag.json?include_children=1&tag=bar&role=odi").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => "", :headers => {})
       @role_api.expects(:add_role).with("#{@base_api_url}/with_tag.json?include_children=1&tag=bar").returns("#{@base_api_url}/with_tag.json?include_children=1&tag=bar&role=odi")
       @role_api.with_tag("bar")
@@ -45,7 +45,7 @@ describe GdsApi::ContentApi do
 
     it "should append the role to the URL for the curated list" do
       stub_request(:get, "#{@base_api_url}/with_tag.json?include_children=1&role=odi&sort=curated&tag=bar").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => "", :headers => {})
       @role_api.expects(:add_role).with("#{@base_api_url}/with_tag.json?include_children=1&sort=curated&tag=bar").returns("#{@base_api_url}/with_tag.json?include_children=1&sort=curated&tag=bar&role=odi")
       @role_api.curated_list("bar")
@@ -53,7 +53,7 @@ describe GdsApi::ContentApi do
 
     it "should append the role to the URL for the latest list" do
       stub_request(:get, "#{@base_api_url}/latest.json?foo=bar&role=odi").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => "", :headers => {})
       @role_api.expects(:add_role).with("#{@base_api_url}/latest.json?foo=bar").returns("#{@base_api_url}/latest.json?foo=bar&role=odi")
       @role_api.latest("foo", "bar")
@@ -61,7 +61,7 @@ describe GdsApi::ContentApi do
     
     it "should append the role to the URL for the upcoming list" do
       stub_request(:get, "#{@base_api_url}/upcoming.json?order_by=date&type=news&role=odi").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => "", :headers => {})
       @role_api.expects(:add_role).with("#{@base_api_url}/upcoming.json?order_by=date&type=news").returns("#{@base_api_url}/upcoming.json?order_by=date&type=news&role=odi")
       @role_api.upcoming("news", "date")
@@ -69,7 +69,7 @@ describe GdsApi::ContentApi do
     
     it "should append the role to the URL for a course instance" do
       stub_request(:get, "#{@base_api_url}/course-instance.json?course=open-data-is-ace&date=2017-09=15&role=odi").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => "", :headers => {})
       @role_api.expects(:add_role).with("#{@base_api_url}/course-instance.json?date=2017-09=15&course=open-data-is-ace").returns("#{@base_api_url}/course-instance.json?date=2017-09=15&course=open-data-is-ace&role=odi")
       @role_api.course_instance("2017-09=15", "open-data-is-ace")
@@ -153,7 +153,7 @@ describe GdsApi::ContentApi do
   describe "section" do
     it "should show section details" do
       stub_request(:get, "#{@base_api_url}/section.json?id=index").
-        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.5.0'}).
+        with(:headers => GdsApi::JsonClient::DEFAULT_REQUEST_HEADERS).
         to_return(:status => 200, :body => File.open(File.expand_path(File.join('test', 'fixtures', 'index_section.json'))).read, :headers => {})
       response = @api.section("index")
       
