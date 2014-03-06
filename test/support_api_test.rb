@@ -99,4 +99,32 @@ describe GdsApi::Support do
 
     assert_raises(GdsApi::HTTPErrorResponse) { @api.create_problem_report({}) }
   end
+
+  it "can pass service feedback" do
+    request_details = {"transaction-completed-values"=>"1", "details"=>"abc"}
+
+    stub_post = stub_request(:post, "#{@base_api_url}/anonymous_feedback/service_feedback").
+      with(:body => {"service_feedback" => request_details}.to_json).
+      to_return(:status => 201)
+
+    @api.create_service_feedback(request_details)
+
+    assert_requested(stub_post)
+  end
+
+  it "can add a custom header onto the service feedback to the support app" do
+    stub_request(:post, "#{@base_api_url}/anonymous_feedback/service_feedback")
+
+    @api.create_service_feedback({}, headers: { "X-Varnish" => "12345"})
+
+    assert_requested(:post, %r{/service_feedback}) do |request|
+      request.headers["X-Varnish"] == "12345"
+    end
+  end
+
+  it "throws an exception when the support app isn't available" do
+    support_isnt_available
+
+    assert_raises(GdsApi::HTTPErrorResponse) { @api.create_service_feedback({}) }
+  end
 end

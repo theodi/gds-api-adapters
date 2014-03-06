@@ -359,7 +359,25 @@ describe GdsApi::ContentApi do
       assert_equal "http://www.test.gov.uk/vat2", response.with_subsequent_pages.to_a.last.web_url
     end
   end
-  
+
+  describe "artefacts for need" do
+    it "should fetch artefacts with a given need id" do
+      skip("ODI does not have needs management.")
+
+      content_api_has_artefacts_for_need_id(100123, [
+        { "format" => "answer", "web_url" => "http://www.gov.uk/burrito" },
+        { "format" => "guide", "web_url" => "http://www.gov.uk/burrito-standard" },
+        { "format" => "transaction", "web_url" => "http://www.gov.uk/local-burrito-place" }
+      ])
+
+      response = @api.for_need(100123)
+
+      assert_equal 3, response.count
+      assert_equal ["http://www.gov.uk/burrito", "http://www.gov.uk/burrito-standard", "http://www.gov.uk/local-burrito-place" ], response.map(&:web_url)
+      assert_equal ["answer", "guide", "transaction" ], response.map(&:format)
+    end
+  end
+
   describe "tags" do
     it "should produce an artefact with the provided tag" do
       tag = "crime-and-justice"
@@ -672,15 +690,11 @@ describe GdsApi::ContentApi do
     describe "test helpers" do
       it "should have representative test helpers" do
         setup_content_api_business_support_schemes_stubs
-  
-        s1 = artefact_for_slug('scheme-1')
-        s1["details"].merge!("business_support_identifier" => "s1")
+        s1 = { "title" => "Scheme 1", "identifier" => "s1", "format" => "business_support" }
         content_api_has_business_support_scheme(s1)
-        s2 = artefact_for_slug('scheme-2')
-        s2["details"].merge!("business_support_identifier" => "s2")
+        s2 = { "title" => "Scheme 2", "identifier" => "s2", "format" => "business_support" }
         content_api_has_business_support_scheme(s2)
-        s3 = artefact_for_slug('scheme-3')
-        s3["details"].merge!("business_support_identifier" => "s3")
+        s3 = { "title" => "Scheme 3", "identifier" => "s3", "format" => "business_support" }
         content_api_has_business_support_scheme(s3)
   
         response = @api.business_support_schemes(['s1', 's3']).to_hash
