@@ -20,9 +20,13 @@ class GdsApi::ContentApi < GdsApi::Base
   def sections
     get_list!("#{base_url}/tags.json?type=section")
   end
-  
+
   def section(section)
     get_list!("#{base_url}/section.json?id=#{CGI.escape(section)}")
+  end
+
+  def search(query)
+    get_list!("#{base_url}/search.json?q=#{CGI.escape(query)}")
   end
 
   def root_sections
@@ -49,29 +53,29 @@ class GdsApi::ContentApi < GdsApi::Base
   def sorted_by(tag, sort_by)
     with_tag(tag, sort: sort_by)
   end
-  
+
   def latest(key, value)
     get_json!("#{base_url}/latest.json?#{key}=#{value}")
   end
-  
+
   def upcoming(type, order_by)
     get_json!("#{base_url}/upcoming.json?order_by=#{order_by}&type=#{type}")
   end
-  
+
   def course_instance(date, course, edition = nil)
     if edition != nil && ! options.include?(:bearer_token)
       raise GdsApi::NoBearerToken
     end
-    
+
     url = "#{base_url}/course-instance.json?date=#{date}&course=#{course}"
-    
+
     if edition.nil?
       get_json!(url)
     else
       get_json!(url + "&edition=#{edition}")
     end
   end
-  
+
   def related(type, item)
     get_list("#{base_url}/related.json?#{CGI.escape(type)}=#{CGI.escape(item)}")
   end
@@ -180,7 +184,7 @@ class GdsApi::ContentApi < GdsApi::Base
         batch_response
       end
     end
-    
+
     def add_role(url)
       uri = URI.parse(url)
       q = URI.decode_www_form(uri.query || []) << ["role", @role]
