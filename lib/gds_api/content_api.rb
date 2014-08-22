@@ -25,8 +25,8 @@ class GdsApi::ContentApi < GdsApi::Base
     get_list!("#{base_url}/section.json?id=#{CGI.escape(section)}")
   end
 
-  def search(query)
-    get_list!("#{base_url}/search.json?q=#{CGI.escape(query)}")
+  def search(query, page=1)
+    get_list!("#{base_url}/search.json?q=#{CGI.escape(query)}&page=#{page}")
   end
 
   def root_sections
