@@ -743,7 +743,7 @@ describe GdsApi::ContentApi do
 
   describe "search" do
     it "should show search results" do
-      stub_request(:get, "#{@base_api_url}/search.json?q=open%20knowledge").
+      stub_request(:get, "#{@base_api_url}/search.json?q=open%20knowledge&page=1").
         with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.25.0'}).
         to_return(:status => 200, :body => File.open(File.expand_path(File.join('test', 'fixtures', 'search_result.json'))).read, :headers => {})
       response = @api.search("open knowledge")
@@ -755,6 +755,15 @@ describe GdsApi::ContentApi do
       assert_equal "2014-01-08T10:32:28+00:00", response['results'][0]['details']['created_at']
       assert_equal "DaPaaS Events", response['results'][1]['title']
       assert_equal "2013-12-18T11:03:04+00:00", response['results'][1]['details']['created_at']
+    end
+
+    it "should show a specific page" do
+      stub_request(:get, "#{@base_api_url}/search.json?q=open%20knowledge&page=2").
+        with(:headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'GDS Api Client v. 7.25.0'}).
+        to_return(:status => 200, :body => File.open(File.expand_path(File.join('test', 'fixtures', 'search_result.json'))).read, :headers => {})
+      response = @api.search("open knowledge", 2)
+
+      assert_equal 2, response['total']
     end
   end
 
