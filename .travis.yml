@@ -2,7 +2,7 @@ language: ruby
 sudo: false
 cache: bundler
 before_install:
-  - gem update --system 2.3.0 
+  - gem update --system 2.6.6 
   - gem --version
 rvm:
 - 1.9.3
