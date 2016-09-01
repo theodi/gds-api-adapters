@@ -76,6 +76,10 @@ class GdsApi::ContentApi < GdsApi::Base
     end
   end
 
+  def lectures
+    get_json!("#{base_url}/lecture-list.json")
+  end
+
   def related(type, item)
     get_list("#{base_url}/related.json?#{CGI.escape(type)}=#{CGI.escape(item)}")
   end
